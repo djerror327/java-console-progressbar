@@ -5,29 +5,43 @@ public class ProgressBar {
         userAdd();
     }
 
-
-    private static final StringBuffer bar = new StringBuffer("");
-    private static int percentageCurent;
+    private static int livePercentage;
+    static String[] progressSpaces = new String[100];
 
     static void progressBar(final double currentVal, final double totalCount) {
 
-        int percentage = (int) ((currentVal / totalCount) * 100);
-        if (percentageCurent == percentage) {
-            percentageCurent++;
-            bar.append("#");
+        if (currentVal == 0) {
+            for (int i = 0; i < 100; i++) {
+                progressSpaces[i] = "-";
+            }
         }
-        System.out.print("[" + bar +" "+  percentage + "%]\r");
+        int percentage = (int) ((currentVal / totalCount) * 100);
+        if (livePercentage == percentage) {
+
+            if (percentage == 0) {
+                progressSpaces[percentage] = "#";
+            } else {
+                progressSpaces[percentage - 1] = "#";
+            }
+            livePercentage++;
+
+        }
+        StringBuilder liveBar = new StringBuilder("");
+        for (String val : progressSpaces) {
+            liveBar.append(val);
+        }
+        System.out.print("[" + liveBar + "] " + percentage + "%\t\t" + currentVal + " out of " + totalCount + "\r");
     }
 
     static void userAdd() {
-        for (int i = 0; i <= 1000; i++) {
+        for (int i = 0; i <= 500; i++) {
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
             System.out.println("user allocation created for user : " + i);
-            progressBar(i, 1000);
+            progressBar(i, 500);
         }
     }
 }
